@@ -2,12 +2,12 @@
 [
     {
         "ftx":{
-            "private-key":"xxx",
-            "public-key":"xxx"
+            "private-key":"xxxx",
+            "public-key":"xxxxx"
         },
         "gmail":{
-            "user-name":"xxx",
-            "user-password":"xxx"
+            "user-name":"xxxx",
+            "user-password":"xxxx"
         },
         "isAktif":true,
         "coinName":"TRX",

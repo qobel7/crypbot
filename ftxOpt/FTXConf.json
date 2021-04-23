@@ -1,0 +1,29 @@
+{
+    "isMailOpt":false,
+    "api-secret":"xxxx",
+    "api-key":"xxxx",
+    "gmail":{
+        "user-name":"xxxx",
+        "user-password":"xxx"
+    },
+    "localOpt":{
+        
+        "coin-name":"DOGE/USD",
+        "history-opt":{
+            "interval":"1d",
+            "limit":500
+        },
+        "supertrend-opt":{
+            "atr-period":108    ,
+            "atr-multiplier":1
+        }
+    },
+    "mailOpt": {
+        "coinName":"TRX",
+        "mailSellPattern":"cccsellccc",
+        "mailBuyPattern":"cccbuyccc",
+        "mailSubject":"TRADING TRX",
+        "isMailAlert":true
+    }
+    
+}

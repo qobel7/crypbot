@@ -1,0 +1,16 @@
+[
+
+    {
+        "api-key":"xxxx",
+        "api-secret":"xxxx",
+        "coin-name":"DOGEUSDT",
+        "history-opt":{
+            "interval":"1d",
+            "limit":500
+        },
+        "supertrend-opt":{
+            "atr-period":108    ,
+            "atr-multiplier":0.1
+        }
+    }
+]

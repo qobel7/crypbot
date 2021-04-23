@@ -108,6 +108,16 @@ class FtxClient:
 
 
 
+    def get_market_price(
+        self,market_name
+        ) -> List[dict]:
+        return self._get(f'/markets/{market_name}') 
+
+    def get_market_history(
+        self, market_name,resolution,limit,start_time,end_time
+        ) -> List[dict]:
+        return self._get(f'/markets/{market_name}/candles?resolution={resolution}&limit={limit}&start_time={start_time}&end_time={end_time}') 
+
     def convert_status(
         self, quote_id: int
         ) -> List[dict]:
