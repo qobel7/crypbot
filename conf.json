@@ -1,0 +1,35 @@
+
+[
+    {
+        "ftx":{
+            "private-key":"xxx",
+            "public-key":"xxx"
+        },
+        "gmail":{
+            "user-name":"xxx",
+            "user-password":"xxx"
+        },
+        "isAktif":true,
+        "coinName":"TRX",
+        "mailSellPattern":"cccsellccc",
+        "mailBuyPattern":"cccbuyccc",
+        "mailSubject":"TRADING TRX",
+        "isMailAlert":true
+    },
+    {
+        "ftx":{
+            "private-key":"xxx",
+            "public-key":"xxxx"
+        },
+        "gmail":{
+            "user-name":"xxx",
+            "user-password":"xxxx"
+        },
+        "isAktif":false,
+        "coinName":"CHZ",
+        "mailSellPattern":"cccsellccc",
+        "mailBuyPattern":"cccbuyccc",
+        "mailSubject":"TRADING CHZ",
+        "isMailAlert":true
+    }
+]
