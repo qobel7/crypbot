@@ -13,9 +13,10 @@
             "interval": "5d",
             "limit": 500
         },
-        "supertrend-opt": {
-            "atr-period": 108,
-            "atr-multiplier": 0.1
+
+        "supertrend-opt":{
+            "atr-period":108    ,
+            "atr-multiplier":1
         },
         "tillson-tr-opt": {
             "value-factor": 0.7,
@@ -29,4 +30,6 @@
         "mailSubject": "TRADING TRX",
         "isMailAlert": true
     }
+
+    
 }
