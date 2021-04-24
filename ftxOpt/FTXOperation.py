@@ -8,24 +8,21 @@ import datetime
 class FTXOperation:
     superTrend =None
     ftx=None
-    confList=[]
-    confMailList=[]
+    confList={}
     isMailAktif=False
     def __init__(self):
         print('start')
-        self.confList = self.readConfFile("FTXConfLocal")
-        self.confMailList = self.readConfFile("FTXConfMail")
-        self.isMailAktif = self.readConfFile("FTXConfAktif")["isMailAktif"]
-        conf = self.confList[0];
+        self.confList = self.readConfFile("FTXConf")
         self.superTrend = SuperTrend()
-        self.ftx =FtxClient(conf["api-key"], conf["api-secret"])
+        self.ftx =FtxClient(self.confList["api-key"], self.confList["api-secret"])
 
     def start(self):
         if(self.isMailAktif==False):
             # pythondan supertrend okuyan kısım
             while True:
-                conf = self.confList[0]
-                self.getSignal(conf)
+                
+                signal = self.getSignal(self.confList["local-opt"])
+                self.tradeOperationLocal(self.confList["local-opt"],signal)
                 sleep(5)
 
         if(self.isMailAktif==False):
@@ -51,11 +48,15 @@ class FTXOperation:
     def getCoinBalances(self,ftx,coinName: str):
         market = ftx.list_markets()
         mm = ftx.get_balances()
-        coin_index = [ x['coin'] for x in mm ].index(coinName)
-        coin_balance  = mm[coin_index]['total']
-        if coinName != 'USD':
-            coinPrice = market[[ x['name'] for x in market ].index(coinName+"/USDT")]["price"]
-            print(f'coinName {coinName} ,  coinPrice {coinPrice}')
+        coin_balance=0
+        try:
+            coin_index = [ x['coin'] for x in mm ].index(coinName)
+            coin_balance  = mm[coin_index]['total']
+            if coinName != 'USD':
+                coinPrice = market[[ x['name'] for x in market ].index(coinName+"/USDT")]["price"]
+                print(f'coinName {coinName} ,  coinPrice {coinPrice}')
+        except ValueError:
+            print(coinName+' can''t found ')
         return coin_balance
 
     def convert(self,ftx,fromcoinName,toCoinName):
@@ -91,7 +92,7 @@ class FTXOperation:
     def getMarketHistory(self,conf):
         now =  datetime.datetime.now().timestamp();
         then =  (datetime.datetime.now() - datetime.timedelta(days=30)).timestamp()
-        klines = self.ftx.get_market_history('TRX/USD',300,500,then, now)
+        klines = self.ftx.get_market_history(conf['coin-name'],300,1000,then, now)
         high = [float(entry["high"]) for entry in klines]
         low = [float(entry["low"]) for entry in klines]
         close = [float(entry["close"]) for entry in klines]
@@ -108,12 +109,18 @@ class FTXOperation:
         coinHistoryMap = self.getMarketHistory(conf)
         coinPrice = self.ftx.get_market_price(conf["coin-name"])["price"];
         signal = self.superTrend.getSignal(coinHistoryMap, conf,coinPrice,"FTX")
+        return signal
 
 
-        
-    def tradeOperation(self,orderType,conf):
-        ftxOperation = FTXOperation();  
-        self.ftx =FtxClient(conf["ftx"]["private-key"],conf["ftx"]["public-key"])
+    def tradeOperationLocal(self,conf,optType):
+        if(optType=='BUY'):
+            self.convert(self.ftx,'USD',conf["coin-transfer-name"])
+        if(optType=='SELL'):
+            self.convert(self.ftx,conf["coin-transfer-name"],'USD')
+
+
+
+    def tradeOperationMail(self,orderType,conf):
         if(orderType != None):
             if(orderType['subject'].find(conf['mailSubject']) != -1):
                 if orderType._payload.find(conf['mailBuyPattern']) != -1:
