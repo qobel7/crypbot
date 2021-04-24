@@ -11,6 +11,10 @@
         "supertrend-opt":{
             "atr-period":108    ,
             "atr-multiplier":0.1
+        },
+        "tillson-tr-opt": {
+            "value-factor": 0.7,
+            "t3length": 8
         }
     }
 ]
