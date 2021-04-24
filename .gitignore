@@ -3,3 +3,14 @@ binanceOpt/BinanceConf.json
 ftxOpt/FTXConf2.json
 ftxOpt/FTXConf3.json
 ftxOpt/FTXConf4.json
+FTX_SELLBUY_sellbuycalculationSuperTrend_300.csv
+Binancesellbuycalculation.csv
+output/FTX_SELLBUY_sellbuycalculationT3_300.csv
+output/FTX_Test_sellbuycalculationSuperTrend_900.csv
+output/FTX_Test_sellbuycalculationSuperTrend_3600.csv
+output/FTX_Test_sellbuycalculationT3_900.csv
+output/FTX_Test_sellbuycalculationT3_3600.csv
+output/*.csv
+./*.csv
+Binancesellbuycalculation.csv
+FTX_SELLBUY_sellbuycalculationSuperTrend_300.csv
