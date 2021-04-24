@@ -79,11 +79,24 @@ class SuperTrend:
         return {"supertrend":supertrend,"close_array":close_array}
     def getSignal(self,historyMap,conf,coinPrice,marketName=""):
         map = self.generateSupertrend(historyMap,conf["supertrend-opt"]["atr-period"], conf["supertrend-opt"]["atr-multiplier"])
+        close_array = map["supertrend"]
+        supertrend = map["close_array"]
+        # new_time = [datetime.fromtimestamp(time / 1000) for time in historyMap["open_time"]]
+
+        # new_time_x = [date.strftime("%y-%m-%d") for date in new_time]
+        # plt.figure(figsize=(11, 6))
+        # plt.plot(new_time_x[400:], close_array[400:], label='Price')
+        # plt.plot(new_time_x[400:], supertrend[400:], label='Supertrend')
+        # plt.xticks(rotation=90, fontsize=5)
+        # plt.title("Supertrend Plot for DOGE/USDT")
+        # plt.xlabel("Open Time")
+        # plt.ylabel("Value")
+        # plt.legend()
+        # plt.show()
         now = datetime.now()
         date = now.strftime("%m/%d/%Y, %H:%M:%S")
         status = "yok";
-        close_array = map["supertrend"]
-        supertrend = map["close_array"]
+       
         last_close = close_array[-1]
         before_close = close_array[-2]
         last_supertrend_value = supertrend[-1]
@@ -104,5 +117,5 @@ class SuperTrend:
                 status = 'SELL'
                 self.lastOperation=status
                 writer.writerow({'coinName':conf['coin-name'],'type': status, 'price': str(coinPrice),'date':date})
-        print(marketName + " ## " +conf['coin-name'] + "-" +status+" "+" = "+str(coinPrice) + "  ----- " +date)
+        print(marketName + " ## SUPERTREND ### " +conf['coin-name'] + "-" +status+" "+" = "+str(coinPrice) + "  ----- " +date + "  || " + str(last_close) + " || "+ str(last_supertrend_value))
         return status
