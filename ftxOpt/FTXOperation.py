@@ -2,11 +2,13 @@ from binance.client import Client
 import json
 import numpy as np
 from  util.SuperTrend import SuperTrend
+from  util.TillsonT3 import TillsonT3
 from ftxOpt.FTXClient import FtxClient
 from time import sleep
 import datetime
 class FTXOperation:
     superTrend =None
+    tillsonT3=None
     ftx=None
     confList={}
     isMailAktif=False
@@ -14,6 +16,7 @@ class FTXOperation:
         print('start')
         self.confList = self.readConfFile("FTXConf")
         self.superTrend = SuperTrend()
+        self.tillsonT3 = TillsonT3()
         self.ftx =FtxClient(self.confList["api-key"], self.confList["api-secret"])
 
     def start(self):
@@ -21,7 +24,8 @@ class FTXOperation:
             # pythondan supertrend okuyan kısım
             while True:
                 
-                signal = self.getSignal(self.confList["local-opt"])
+                signal = self.getSignalSuperTrend(self.confList["local-opt"])
+                self.getSignalTillsonT3(self.confList["local-opt"])
                 self.tradeOperationLocal(self.confList["local-opt"],signal)
                 sleep(5)
 
@@ -32,34 +36,42 @@ class FTXOperation:
                     while True:    
                         orderType=self.readGmail(conf)
                         self.tradeOperation(orderType,conf)
-                    sleep(5)
+                    sleep(10)
 
-    def sell(self,ftx,coinName: str,coinIndex: str):
-        market = ftx.list_markets()
-        mm = ftx.get_balances()
+    def sell(self,coinName,coinIndex):
+        market = self.ftx.list_markets()
+        mm = self.ftx.get_balances()
         coin_index = [ x['coin'] for x in mm ].index(coinIndex)
         coin_balance  = mm[coin_index]['total']
-        tt=ftx.place_order('TRX/USDT','sell',None,coin_balance,'market')
+        try:
+            tt=self.ftx.place_order(coinName,'sell',None,coin_balance,'market')
+            print("sell response:"+str(tt))
+        except:
+            print("sell balance too small: "+coin_balance)
+        
 
-    def buy(self,ftx,coinName: str):
-        print('test')
-        #ftx.place_order('TRX/USDT','buy',None,coin_balance,'market')
-
-    def getCoinBalances(self,ftx,coinName: str):
-        market = ftx.list_markets()
-        mm = ftx.get_balances()
+    def buy(self,coinName,coinIndex):
+        balance = self.getCoinBalances("USDT")
+        if(balance>0.01):
+            tt = self.ftx.place_order(coinName,'buy',None,balance*100,'market')
+            print("buy response:"+str(tt))
+        else:
+            print("not enough balance:"+str(balance))
+    def getCoinBalances(self,coinName: str):
+        market = self.ftx.list_markets()
+        mm = self.ftx.get_balances()
         coin_balance=0
         try:
             coin_index = [ x['coin'] for x in mm ].index(coinName)
             coin_balance  = mm[coin_index]['total']
-            if coinName != 'USD':
+            if coinName != 'USDT':
                 coinPrice = market[[ x['name'] for x in market ].index(coinName+"/USDT")]["price"]
                 print(f'coinName {coinName} ,  coinPrice {coinPrice}')
         except ValueError:
             print(coinName+' can''t found ')
         return coin_balance
 
-    def convert(self,ftx,fromcoinName,toCoinName):
+    def convert(self,fromcoinName,toCoinName):
          balance = self.getCoinBalances(ftx,fromcoinName)
          if balance == 0 :
              print('miktar yok')
@@ -92,7 +104,9 @@ class FTXOperation:
     def getMarketHistory(self,conf):
         now =  datetime.datetime.now().timestamp();
         then =  (datetime.datetime.now() - datetime.timedelta(days=30)).timestamp()
-        klines = self.ftx.get_market_history(conf['coin-name'],300,1000,then, now)
+        klines = self.ftx.get_market_history(conf['coin-name'],300,5000,then, now)
+        
+        open_time = [float(entry["time"]) for entry in klines]
         high = [float(entry["high"]) for entry in klines]
         low = [float(entry["low"]) for entry in klines]
         close = [float(entry["close"]) for entry in klines]
@@ -102,21 +116,30 @@ class FTXOperation:
         klinesMap = {
             "close":close_array,
             "high":high_array,
-            "low":low_array
+            "low":low_array,
+            "open_time":open_time
         }
         return klinesMap;
-    def getSignal(self,conf):
+    def getSignalSuperTrend(self,conf):
         coinHistoryMap = self.getMarketHistory(conf)
         coinPrice = self.ftx.get_market_price(conf["coin-name"])["price"];
         signal = self.superTrend.getSignal(coinHistoryMap, conf,coinPrice,"FTX")
         return signal
 
+    def getSignalTillsonT3(self,conf):
+            coinHistoryMap = self.getMarketHistory(conf)
+            coinPrice = self.ftx.get_market_price(conf["coin-name"])["price"];
+            signal = self.tillsonT3.getSignal(coinHistoryMap, conf,coinPrice,"FTX")
+            return signal
+
 
     def tradeOperationLocal(self,conf,optType):
         if(optType=='BUY'):
-            self.convert(self.ftx,'USD',conf["coin-transfer-name"])
+            self.buy(conf["coin-name"], conf["coin-transfer-name"])
+            #self.convert(self.ftx,'USD',conf["coin-transfer-name"])
         if(optType=='SELL'):
-            self.convert(self.ftx,conf["coin-transfer-name"],'USD')
+            self.sell(conf["coin-name"], conf["coin-transfer-name"])
+            #self.convert(self.ftx,conf["coin-transfer-name"],'USD')
 
 
 
