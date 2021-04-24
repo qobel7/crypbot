@@ -3,6 +3,7 @@ import json
 import numpy as np
 from  util.SuperTrend import SuperTrend
 from datetime import datetime
+from  util.TillsonT3 import TillsonT3
 
 from time import sleep
 class BinanceOperation:
@@ -12,6 +13,7 @@ class BinanceOperation:
     superTrend=None
     def __init__(self):
         self.superTrend = SuperTrend()
+        self.tillsonT3 = TillsonT3()
         self.readConfFile()
         conf = self.confList[0];
         self.client = Client(conf["api-key"], conf["api-secret"])
@@ -21,6 +23,7 @@ class BinanceOperation:
             coinPrice = self.   client.get_avg_price(symbol=conf['coin-name'])["price"]
             history = self.getCoinHistory(conf["coin-name"], conf["history-opt"]["interval"], conf["history-opt"]["limit"])
             signal = self.superTrend.getSignal(history, conf,coinPrice,"Binance")
+            self.tillsonT3.getSignal(history, conf, coinPrice, "Binance")
 
             sleep(5)
 
