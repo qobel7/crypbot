@@ -12,9 +12,15 @@ class FTXOperation:
     ftx=None
     confList={}
     isMailAktif=False
-    def __init__(self):
+    def __init__(self,confName):
         print('start')
-        self.confList = self.readConfFile("FTXConf")
+        if(confName):
+            fileName = confName
+        else:
+            fileName = "FTXConf"
+        print("fileName",fileName)
+        self.confList = self.readConfFile(fileName)
+        print("test",self.confList["test"])
         self.superTrend = SuperTrend()
         self.tillsonT3 = TillsonT3()
         self.ftx =FtxClient(self.confList["api-key"], self.confList["api-secret"])
@@ -26,7 +32,8 @@ class FTXOperation:
                 
                 signal = self.getSignalSuperTrend(self.confList["local-opt"])
                 self.getSignalTillsonT3(self.confList["local-opt"])
-                self.tradeOperationLocal(self.confList["local-opt"],signal)
+                if(self.confList["test"]==False):
+                    self.tradeOperationLocal(self.confList["local-opt"],signal)
                 sleep(5)
 
         if(self.isMailAktif==False):
@@ -104,7 +111,7 @@ class FTXOperation:
     def getMarketHistory(self,conf):
         now =  datetime.datetime.now().timestamp();
         then =  (datetime.datetime.now() - datetime.timedelta(days=30)).timestamp()
-        klines = self.ftx.get_market_history(conf['coin-name'],300,5000,then, now)
+        klines = self.ftx.get_market_history(conf['coin-name'],conf["history-opt"]["interval"],conf["history-opt"]["limit"],then, now)
         
         open_time = [float(entry["time"]) for entry in klines]
         high = [float(entry["high"]) for entry in klines]

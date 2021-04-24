@@ -48,7 +48,7 @@ class TillsonT3:
         now = datetime.now()
         date = now.strftime("%m/%d/%Y, %H:%M:%S")
         status = "yok";
-        with open(marketName+'sellbuycalculationT3.csv', 'a+', newline='') as file:
+        with open(marketName+'_'+conf["conf-name"]+'_sellbuycalculationT3_'+str(conf["history-opt"]["interval"])+'.csv', 'a+', newline='') as file:
             fieldnames = ['coinName','type', 'price','date']
             writer = DictWriter(file, fieldnames=fieldnames)
             if t3_last > t3_previous and t3_previous < t3_prev_previous and self.lastOperation!='BUY':

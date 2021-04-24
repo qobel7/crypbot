@@ -102,7 +102,7 @@ class SuperTrend:
         last_supertrend_value = supertrend[-1]
         before_supertrend_value = supertrend[-2]
         
-        with open(marketName+'sellbuycalculation.csv', 'a+', newline='') as file:
+        with open(marketName+'_'+conf["conf-name"]+'_sellbuycalculationSuperTrend_'+str(conf["history-opt"]["interval"])+'.csv', 'a+', newline='') as file:
             fieldnames = ['coinName','type', 'price','date']
             writer = DictWriter(file, fieldnames=fieldnames)
 

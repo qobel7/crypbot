@@ -2,6 +2,8 @@
     "isMailOpt": false,
     "api-key": "xxxx",
     "api-secret": "xxxx",
+    "test":true,  
+    
     "gmail": {
         "user-name": "xxxx",
         "user-password": "xxxx"
@@ -9,13 +11,14 @@
     "local-opt": {
         "coin-name": "DOGE/USDT",
         "coin-transfer-name": "DOGE",
+        "conf-name":"FTXConf",
         "history-opt": {
-            "interval": "5d",
+            "interval": 300,
             "limit": 500
         },
-
+        "periot":300,
         "supertrend-opt":{
-            "atr-period":108    ,
+            "atr-period":10    ,
             "atr-multiplier":1
         },
         "tillson-tr-opt": {

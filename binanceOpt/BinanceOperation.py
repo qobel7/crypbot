@@ -11,10 +11,12 @@ class BinanceOperation:
     klines=[]
     confList=[]
     superTrend=None
-    def __init__(self):
+    def __init__(self,fileName):
         self.superTrend = SuperTrend()
         self.tillsonT3 = TillsonT3()
-        self.readConfFile()
+        if(fileName==None):
+            fileName="BinanceConf"
+        self.readConfFile(fileName)
         conf = self.confList[0];
         self.client = Client(conf["api-key"], conf["api-secret"])
     def start(self):
@@ -45,9 +47,9 @@ class BinanceOperation:
         }
         return klinesMap
 
-    def readConfFile(self):
+    def readConfFile(self,fileName):
         count = 0 ;
-        with open('binanceOpt/BinanceConf.json') as json_file:
+        with open('binanceOpt/'+ fileName +'.json') as json_file:
             data = json.load(json_file)
             for i in data:
                 count+=1

@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             //"program": "__init__.py",
-            "program": "util/SuperTrend2.py",
+            "program": "__init__.py",
             "console": "integratedTerminal"
         }
     ]

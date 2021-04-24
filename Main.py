@@ -3,15 +3,15 @@ from binanceOpt.BinanceOperation import BinanceOperation
 
 class Main:
   
-    def start(self,marketName):
+    def start(self,marketName,confName):
         if(marketName == 'FTX'):
-            self.ftxLocalIndicator()
+            self.ftxLocalIndicator(confName)
         if(marketName == 'Binance'):
-            self.binanceLocalIndicator()
-    def binanceLocalIndicator(self):
-        BinanceOperation().start()
-    def ftxLocalIndicator(self):
-        FTXOperation().start()
+            self.binanceLocalIndicator(confName)
+    def binanceLocalIndicator(self,confName):
+        BinanceOperation(confName).start()
+    def ftxLocalIndicator(self,confName):
+        FTXOperation(confName).start()
 
 
 
