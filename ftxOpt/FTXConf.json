@@ -1,29 +1,32 @@
 {
-    "isMailOpt":false,
-    "api-secret":"xxxx",
-    "api-key":"xxxx",
-    "gmail":{
-        "user-name":"xxxx",
-        "user-password":"xxx"
+    "isMailOpt": false,
+    "api-key": "xxxx",
+    "api-secret": "xxxx",
+    "gmail": {
+        "user-name": "xxxx",
+        "user-password": "xxxx"
     },
-    "localOpt":{
-        
-        "coin-name":"DOGE/USD",
-        "history-opt":{
-            "interval":"1d",
-            "limit":500
+    "local-opt": {
+        "coin-name": "DOGE/USDT",
+        "coin-transfer-name": "DOGE",
+        "history-opt": {
+            "interval": "5d",
+            "limit": 500
         },
-        "supertrend-opt":{
-            "atr-period":108    ,
-            "atr-multiplier":1
+        "supertrend-opt": {
+            "atr-period": 108,
+            "atr-multiplier": 0.1
+        },
+        "tillson-tr-opt": {
+            "value-factor": 0.7,
+            "t3length": 8
         }
     },
-    "mailOpt": {
-        "coinName":"TRX",
-        "mailSellPattern":"cccsellccc",
-        "mailBuyPattern":"cccbuyccc",
-        "mailSubject":"TRADING TRX",
-        "isMailAlert":true
+    "mail-opt": {
+        "coin-name": "DOGE",
+        "mailSellPattern": "cccsellccc",
+        "mailBuyPattern": "cccbuyccc",
+        "mailSubject": "TRADING TRX",
+        "isMailAlert": true
     }
-    
 }
